@@ -54,15 +54,15 @@ Automatically routes requests to the optimal model based on task complexity:
 
 | Task Type | Complexity | Model Used | Cost | Reason |
 |-----------|------------|------------|------|--------|
-| Terraform Validation | Complex | claude-3-5-sonnet | $0.003 | Advanced reasoning |
-| Security Scan | Moderate | gpt-4o-mini | $0.00015 | Fast & cheap |
-| Docker Analysis | Moderate | gpt-4o | $0.0025 | Balanced |
-| K8s Validation | Simple | gpt-4o-mini | $0.00015 | Syntax check |
+| Terraform Validation | Complex | **gpt-5** | $0.005 | Latest GPT-5 with enhanced reasoning |
+| Security Scan | Complex | **gpt-5** | $0.005 | Advanced security analysis |
+| Docker Analysis | Moderate | **nebius/gpt-oss-120b** | $0.0012 | Cost-effective open-weight model |
+| K8s Validation | Simple | gpt-4o-mini | $0.00015 | Fast syntax checks |
 
 ```python
 # Model gateway automatically selects the best model
 model = model_gateway.select_model("terraform", TaskComplexity.COMPLEX)
-# Returns: "claude-3-5-sonnet" for complex infrastructure analysis
+# Returns: "gpt-5" for complex infrastructure analysis
 ```
 
 ### ✅ 3. Blaxel MCP Hub (5 Prebuilt Servers)
@@ -163,10 +163,10 @@ Leverages Blaxel's globally distributed infrastructure:
 graph TB
     User[User via Gradio UI] --> Agent[DevOps Autopilot Agent]
     Agent --> Gateway[Blaxel Model Gateway]
-    Gateway --> Claude[Claude 3.5 Sonnet]
+    Gateway --> GPT5[GPT-5]
     Gateway --> GPT4[GPT-4o]
     Gateway --> GPT4Mini[GPT-4o-mini]
-    Gateway --> Haiku[Claude 3.5 Haiku]
+    Gateway --> Nebius[Nebius GPT OSS 120B]
     
     Agent --> Hub[Blaxel MCP Hub]
     Hub --> GitHub[GitHub MCP]
@@ -256,10 +256,10 @@ User: "Validate my Terraform plan"
 
 DevOps Autopilot:
 ✅ Sandbox: prod-base (boot: 22ms)
-✅ Model: claude-3-5-sonnet (complex reasoning)
+✅ Model: gpt-5 (latest with enhanced reasoning)
 ✅ MCP Hub: GitHub + Filesystem + Memory
 ✅ Result: Plan valid, 3 resources to add
-💰 Cost: $0.004 (vs $0.027 on Lambda)
+💰 Cost: $0.005 (vs $0.027 on Lambda)
 ```
 
 ### 2. Security Scan
@@ -282,10 +282,10 @@ User: "Analyze my Dockerfile"
 
 DevOps Autopilot:
 ✅ Sandbox: prod-node (boot: 21ms)
-✅ Model: gpt-4o
+✅ Model: nebius/gpt-oss-120b (cost-effective 120B open-weight)
 ✅ Tools: Hadolint + Trivy image scan
 💡 Potential size reduction: 65%
-💰 Cost: $0.003
+💰 Cost: $0.0012
 ```
 
 ---
@@ -316,7 +316,7 @@ DevOps Autopilot:
 | Feature | Status | Implementation |
 |---------|--------|----------------|
 | **Blaxel Sandboxes** | ✅ | 3 images, <25ms boot, scale-to-zero |
-| **Model Gateway** | ✅ | 4 models, intelligent routing, cost tracking |
+| **Model Gateway** | ✅ | 4 models (GPT-5, GPT-4o, GPT-4o-mini, Nebius OSS 120B) |
 | **MCP Hub** | ✅ | 5 prebuilt servers integrated |
 | **Custom MCPs** | ✅ | 5 specialized DevOps tools |
 | **Agents Hosting** | ✅ | Async runtime, autoscale, deploy-ready |
@@ -332,7 +332,7 @@ DevOps Autopilot:
 - **Performance**: 40x faster sandbox boot (25ms vs 1000ms)
 - **Scalability**: Scale-to-zero = $0 idle cost
 - **Integration**: 10 total MCP servers (5 custom + 5 Hub)
-- **Models**: 4 AI models with intelligent routing
+- **Models**: 4 AI models (GPT-5, GPT-4o, GPT-4o-mini, Nebius OSS 120B)
 - **Observability**: Full OpenTelemetry integration
 
 ---
@@ -346,9 +346,9 @@ devops-autopilot/
 ├── blaxel.toml                     # Comprehensive Blaxel configuration
 ├── requirements.txt                # All dependencies including OpenTelemetry
 ├── README.md                       # This file
-├── DEMO_SCRIPT.md                  # 5-minute demo presentation guide
-├── PHASE1_VERIFICATION.md          # Phase 1 verification report
-├── BLAXEL_COVERAGE_STATUS.md       # Coverage progress tracking
+├── LICENSE                         # MIT License
+├── .gitignore                      # Git exclusions
+├── .env.example                    # Environment template
 │
 ├── mcp_servers/                    # Custom MCP servers
 │   ├── terraform_validator/        # Infrastructure validation (prod-base)
@@ -360,7 +360,7 @@ devops-autopilot/
 ├── utils/                          # Utility modules
 │   ├── blaxel_client.py            # Blaxel SDK wrapper
 │   ├── orchestrator.py             # Multi-MCP workflow coordination
-│   └── model_gateway.py            # Intelligent model routing
+│   └── model_gateway.py            # Intelligent model routing (6 models)
 │
 └── tests/                          # Unit tests
     └── test_security_scanner.py    # MCP server tests

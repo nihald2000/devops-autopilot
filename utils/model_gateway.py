@@ -19,10 +19,10 @@ class BlaxelModelGateway:
     
     def __init__(self):
         self.model_costs = {
-            "gpt-4o-mini": 0.00015,  # per 1K tokens
+            "gpt-5": 0.005,  # Latest GPT-5 (Aug 2025)
             "gpt-4o": 0.0025,
-            "claude-3-5-sonnet": 0.003,
-            "claude-3-5-haiku": 0.0008,
+            "gpt-4o-mini": 0.00015,
+            "nebius/gpt-oss-120b": 0.0012,  # Nebius AI open-weight model
         }
         
         self.total_cost = 0.0
@@ -39,27 +39,27 @@ class BlaxelModelGateway:
         Returns:
             Model name to use
         """
-        # Routing logic based on task and complexity
+        # Routing logic based on task and complexity (OpenAI + Nebius only)
         routing_map = {
-            ("terraform", TaskComplexity.COMPLEX): "claude-3-5-sonnet",  # Best reasoning
-            ("terraform", TaskComplexity.MODERATE): "gpt-4o",  # Good balance
-            ("terraform", TaskComplexity.SIMPLE): "gpt-4o-mini",  # Fast & cheap
+            ("terraform", TaskComplexity.COMPLEX): "gpt-5",  # GPT-5 best for complex reasoning
+            ("terraform", TaskComplexity.MODERATE): "gpt-4o",
+            ("terraform", TaskComplexity.SIMPLE): "gpt-4o-mini",
             
-            ("security", TaskComplexity.COMPLEX): "gpt-4o",  # Security analysis
-            ("security", TaskComplexity.MODERATE): "gpt-4o-mini",  # Quick scans
-            ("security", TaskComplexity.SIMPLE): "claude-3-5-haiku",  # Fast checks
+            ("security", TaskComplexity.COMPLEX): "gpt-5",  # Advanced security analysis
+            ("security", TaskComplexity.MODERATE): "gpt-4o-mini",
+            ("security", TaskComplexity.SIMPLE): "gpt-4o-mini",
             
-            ("docker", TaskComplexity.COMPLEX): "claude-3-5-sonnet",  # Optimization
-            ("docker", TaskComplexity.MODERATE): "gpt-4o",  # Analysis
-            ("docker", TaskComplexity.SIMPLE): "gpt-4o-mini",  # Quick checks
+            ("docker", TaskComplexity.COMPLEX): "gpt-5",
+            ("docker", TaskComplexity.MODERATE): "nebius/gpt-oss-120b",  # Open-weight alternative
+            ("docker", TaskComplexity.SIMPLE): "gpt-4o-mini",
             
-            ("k8s", TaskComplexity.COMPLEX): "claude-3-5-sonnet",  # Policy analysis
-            ("k8s", TaskComplexity.MODERATE): "gpt-4o",  # Validation
-            ("k8s", TaskComplexity.SIMPLE): "gpt-4o-mini",  # Syntax check
+            ("k8s", TaskComplexity.COMPLEX): "gpt-5",
+            ("k8s", TaskComplexity.MODERATE): "gpt-4o",
+            ("k8s", TaskComplexity.SIMPLE): "gpt-4o-mini",
             
-            ("diff", TaskComplexity.COMPLEX): "gpt-4o",  # State comparison
-            ("diff", TaskComplexity.MODERATE): "gpt-4o-mini",  # Simple diff
-            ("diff", TaskComplexity.SIMPLE): "claude-3-5-haiku",  # Quick check
+            ("diff", TaskComplexity.COMPLEX): "nebius/gpt-oss-120b",  # Cost-effective for large diffs
+            ("diff", TaskComplexity.MODERATE): "gpt-4o-mini",
+            ("diff", TaskComplexity.SIMPLE): "gpt-4o-mini",
         }
         
         model = routing_map.get((task_type, complexity), "gpt-4o-mini")
@@ -103,10 +103,10 @@ class BlaxelModelGateway:
         cost = self.estimate_cost(model)
         
         explanations = {
-            "claude-3-5-sonnet": "Advanced reasoning for complex infrastructure analysis",
+            "gpt-5": "Latest GPT-5 with enhanced reasoning and multimodal capabilities",
             "gpt-4o": "Balanced performance for general DevOps tasks",
             "gpt-4o-mini": "Fast & cost-effective for simple validations",
-            "claude-3-5-haiku": "Ultra-fast for quick checks"
+            "nebius/gpt-oss-120b": "Open-weight 120B model for cost-effective reasoning"
         }
         
         return f"""

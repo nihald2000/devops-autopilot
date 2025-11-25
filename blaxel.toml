@@ -15,10 +15,10 @@ default_model = "gpt-4o-mini"
 routing_strategy = "cost_optimized"
 
 models = [
-    { name = "claude-3-5-sonnet", use_for = ["complex_terraform", "deep_analysis"] },
-    { name = "gpt-4o", use_for = ["security_analysis", "k8s_validation"] },
-    { name = "gpt-4o-mini", use_for = ["quick_checks", "syntax_validation"] },
-    { name = "claude-3-5-haiku", use_for = ["fast_scans"] }
+    { name = "gpt-5", use_for = ["complex_terraform", "advanced_security", "deep_analysis"] },
+    { name = "gpt-4o", use_for = ["general_analysis", "k8s_validation", "moderate_tasks"] },
+    { name = "gpt-4o-mini", use_for = ["quick_checks", "syntax_validation", "simple_tasks"] },
+    { name = "nebius/gpt-oss-120b", use_for = ["cost_effective_reasoning", "large_diffs", "docker_analysis"] }
 ]
 
 [sandboxes]
