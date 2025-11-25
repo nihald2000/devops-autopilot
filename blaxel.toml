@@ -1,0 +1,68 @@
+name = "devops-autopilot"
+description = "AI-powered DevOps operations agent using Blaxel Sandboxes and MCP"
+version = "0.1.0"
+
+[agent]
+model = "gpt-4o"
+system_prompt = "You are DevOps Autopilot, an expert DevOps engineer. You use Blaxel Sandboxes to validate infrastructure, scan for security issues, and simulate deployments. You always prioritize safety and correctness."
+runtime = "async"
+autoscale = true
+
+[model_gateway]
+# Intelligent model routing through Blaxel Gateway
+enabled = true
+default_model = "gpt-4o-mini"
+routing_strategy = "cost_optimized"
+
+models = [
+    { name = "claude-3-5-sonnet", use_for = ["complex_terraform", "deep_analysis"] },
+    { name = "gpt-4o", use_for = ["security_analysis", "k8s_validation"] },
+    { name = "gpt-4o-mini", use_for = ["quick_checks", "syntax_validation"] },
+    { name = "claude-3-5-haiku", use_for = ["fast_scans"] }
+]
+
+[sandboxes]
+# Multiple Blaxel sandbox images for different tasks
+images = [
+    { name = "prod-base", use_for = ["terraform", "general"] },
+    { name = "prod-python", use_for = ["python_security", "bandit"] },
+    { name = "prod-node", use_for = ["docker", "javascript"] }
+]
+boot_timeout_ms = 25
+scale_to_zero = true
+
+[integration]
+# Integration settings for Blaxel MCP Hub and custom tools
+tools = [
+    "mcp_servers.terraform_validator.server",
+    "mcp_servers.security_scanner.server",
+    "mcp_servers.docker_analyzer.server",
+    "mcp_servers.k8s_validator.server",
+    "mcp_servers.infra_diff.server"
+]
+
+[mcp_hub]
+# Blaxel MCP Hub prebuilt servers
+enabled = true
+servers = [
+    { name = "github", enabled = true, config = { auth = "env:GITHUB_TOKEN" } },
+    { name = "filesystem", enabled = true },
+    { name = "memory", enabled = true, config = { persist = true } },
+    { name = "slack", enabled = true, config = { webhook = "env:SLACK_WEBHOOK" } },
+    { name = "time", enabled = true }
+]
+
+[observability]
+# OpenTelemetry integration
+enabled = true
+endpoint = "blaxel-otel-collector"
+trace_sample_rate = 1.0
+metrics_interval_seconds = 10
+
+[background_jobs]
+# Scheduled DevOps tasks
+enabled = true
+jobs = [
+    { name = "daily-drift-check", schedule = "0 9 * * *", function = "drift_detection" },
+    { name = "security-scan", schedule = "0 */6 * * *", function = "security_scan" }
+]
