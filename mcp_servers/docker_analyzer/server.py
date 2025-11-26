@@ -32,10 +32,10 @@ async def analyze_dockerfile(dockerfile_content: str) -> str:
     
     start_time = time.time()
     
-    # Create sandbox for analysis using prod-node (has Docker tools)
+    # Create sandbox for analysis using node (has Docker tools)
     config = SandboxCreateConfiguration(
         name=f"docker-analyze-{cache_key[:8]}",
-        image="prod-node"  # Node image includes Docker tooling
+        image="blaxel/node:latest"  # Node image includes Docker tooling
     )
     sandbox = await SandboxInstance.create(sandbox=config)
     

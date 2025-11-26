@@ -35,10 +35,10 @@ async def scan_codebase(repo_url: str, scan_types: List[str] = ["trivy", "bandit
 
     start_time = time.time()
     
-    # Create a sandbox using prod-python image (optimized for Bandit, Safety)
+    # Create a sandbox using py-app image (Python tools for security scanning)
     config = SandboxCreateConfiguration(
         name=f"sec-scan-{cache_key[:8]}",
-        image="prod-python"  # Python-optimized image for security tools
+        image="blaxel/py-app:latest"  # Python-optimized image for security tools
     )
     sandbox = await SandboxInstance.create(sandbox=config)
     

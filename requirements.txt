@@ -3,8 +3,8 @@ gradio>=6.0.0
 python-dotenv
 mcp
 
-# Blaxel SDK
-blaxel
+# Blaxel SDK (with all extras for sandbox, agents, MCP)
+blaxel[all]
 
 # Data visualization
 plotly>=5.17.0
